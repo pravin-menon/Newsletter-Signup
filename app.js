@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const request = require("request");
 const https = require("https");
+require("dotenv").config();
 
 const app = express();
 app.use(bodyParser.urlencoded({extended: true}));
@@ -15,8 +16,8 @@ app.post("/", function(req, res) {
     const fName = req.body.firstName;
     const lName = req.body.lastName;
     const email = req.body.inputEmail;
-    const apiKey = "966b5eb4accc7e064f8042882a9db63c-us2";
-    const audienceID = "18f642cd19";
+    const apiKey = process.env.API_KEY;
+    const audienceID = process.env.AUDIENCE_ID;
 
     const data = {
         members: [
@@ -36,7 +37,7 @@ app.post("/", function(req, res) {
     const url = "https://us2.api.mailchimp.com/3.0/lists/" + audienceID;
     const options = {
         method: "POST",
-        auth: "pravin1:966b5eb4accc7e064f8042882a9db63c-us2"
+        auth: process.env.AUTH_KEY
     }
     const request = https.request(url, options, function(response) {
         if (response.statusCode === 200) {
@@ -45,7 +46,7 @@ app.post("/", function(req, res) {
             res.sendFile(__dirname + "/failure.html");
         }
         response.on("data", function(data) {
-            console.log(JSON.parse(data));
+            // console.log(JSON.parse(data));
             // console.log(response.statusCode);
         });
     });
